@@ -1,0 +1,9 @@
+.pokeCard{
+    height: 70px;
+}
+
+#pokeListBox {
+    max-height: 50vh;
+    height: 50vh;
+    overflow-y: scroll;
+}

@@ -1,1 +1,1 @@
-{"version":3,"sourceRoot":"","sources":[],"names":[],"mappings":"","file":"pokemonCardList.css"}
+{"version":3,"sourceRoot":"","sources":["pokemonCardList.scss"],"names":[],"mappings":"AAAA;EACI;;;AAGJ;EACI;EACA;EACA","file":"pokemonCardList.css"}
