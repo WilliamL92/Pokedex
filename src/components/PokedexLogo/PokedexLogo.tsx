@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect } from 'react';
-import pokedexLogo from "../../media/pokedex-logo.png"
+import pokedexLogo from "../../media/pokedex-logo.png";
 import "./pokedexLogo.css"
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
