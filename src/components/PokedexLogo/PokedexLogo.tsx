@@ -7,7 +7,6 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import ThemeContext from '../../Context/DarkModeContext'
 import LangContext from '../../Context/LangContext';
-import { lang as langType } from "../../types/pokemonsInterface"
 
 const PokedexLogo = () => {
     const { darkMode, setDarkMode } = useContext(ThemeContext)

@@ -3,26 +3,29 @@ import Paper from '@mui/material/Paper';
 import Box from "@mui/material/Box"
 import { getAllPokemons, getAllPokemonTypes } from "../../functions/fetchPokemonsData"
 import PokemonCard from '../PokemonCard/PokemonCard';
+import LangContext from '../../Context/LangContext';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import "./pokemonCardList.css"
-import LangContext from '../../Context/LangContext';
 
 const PokemonCardList = () => {
 
-    const [pokeLists, setPokeLists] = useState<{name: string, image: string}[]>([])
-    const [loading, setLoading] = useState(false)
+    const [pokeLists, setPokeLists] = useState<{name: string, image: string}[]>([]);
+    const [loading, setLoading] = useState(false);
     const { lang, setLang } = useContext(LangContext);
+    const [types, setTypes] = useState<string[]>([])
+    const [type, setType] = useState("TOUT");
 
     useEffect(()=>{
         (async ()=>{
             setLoading(true)
-            const pokemonTypesObject = await getAllPokemonTypes()
-            const pokemonTypes = pokemonTypesObject.map(e => e.name)
+            const pokemonTypesObject = await getAllPokemonTypes(lang)
+            setTypes(pokemonTypesObject)
             const pokemonsList = await getAllPokemons(lang)
+            setType(lang === "fr"?"TOUT":"ALL")
             setPokeLists(pokemonsList)
             setLoading(false)
         })()
@@ -43,7 +46,7 @@ const PokemonCardList = () => {
             >
                 {
                     loading?
-                    <p>Chargement...</p>:
+                    <p>{lang === "fr"?"Chargement...":"Loading..."}</p>:
                     <div>
                         <FormControl id="formControl">
                         <Box
@@ -66,12 +69,12 @@ const PokemonCardList = () => {
                             <Select
                                 labelId="typeSelect"
                                 id="typeSelectBox"
-                                value={"fire"}
+                                value={type}
                                 label="Type"
-                                onChange={()=>{}}
+                                onChange={(e)=>{setType(e.target.value)}}
                             >
-                            <MenuItem value={"fire"}>FIRE</MenuItem>
-                            <MenuItem value={"water"}>WATER</MenuItem>
+                                <MenuItem value={lang === "fr"?"TOUT":"ALL"} key={0}>{lang === "fr"?"TOUT":"ALL"}</MenuItem>
+                                {types.map((e, i) => <MenuItem key={i+1} value={e}>{e}</MenuItem>)}
                             </Select>
                             <TextField type="number" InputLabelProps={{ shrink: true, }} InputProps={{ inputProps: { min: 1 } }} id="max-pokemon" label="pokemons max" variant="standard" />
                         </Box>

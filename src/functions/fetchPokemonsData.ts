@@ -73,15 +73,25 @@ export function getAllPokemons(lang: lang): Promise<{name: string, image: string
     })
 }
 
-export function getAllPokemonTypes(): Promise<{name: string}[]>{
+export function getAllPokemonTypes(lang: lang): Promise<string[]>{
     return new Promise(async (resolve, reject)=>{
         const typesURL = "https://pokeapi.co/api/v2/type";
-        try{
-            const pokeData = await axios.get(typesURL);
-            resolve(pokeData.data.results);
+        const pokeData = await axios.get(typesURL);
+        if(lang === "en"){
+            resolve(pokeData.data.results.map((e: {name: string}) => e.name).filter((rs: string) => rs !== "unknown").sort());
         }
-        catch(err){
-            reject(err);
+        else if(lang === "fr"){
+            let frPokemonTab: string[] = []
+            let intTab = 0
+            pokeData.data.results.map(async (e: {name: string}, i: number) => {
+                const langURL = `https://pokeapi.co/api/v2/type/${e.name}`;
+                const pokeDataFr = await axios.get(langURL);
+                intTab++
+                frPokemonTab.push(pokeDataFr.data.names[3].name)
+                if(intTab >= pokeData.data.results.length-1){
+                    resolve(frPokemonTab.filter((rs: string) => rs !== "???" && rs !== "Crypto").sort());
+                }
+            })
         }
     })
 }
