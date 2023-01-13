@@ -17,15 +17,15 @@ const PokemonCardList = () => {
     const [loading, setLoading] = useState(false);
     const { lang, setLang } = useContext(LangContext);
     const [types, setTypes] = useState<string[]>([])
-    const [type, setType] = useState("TOUT");
+    const [type, setType] = useState(0);
 
     useEffect(()=>{
         (async ()=>{
             setLoading(true)
             const pokemonTypesObject = await getAllPokemonTypes(lang)
             setTypes(pokemonTypesObject)
-            const pokemonsList = await getAllPokemons(lang)
-            setType(lang === "fr"?"TOUT":"ALL")
+            const pokemonsList = await getAllPokemons(lang, type)
+            setType(0)
             setPokeLists(pokemonsList)
             setLoading(false)
         })()
@@ -49,41 +49,42 @@ const PokemonCardList = () => {
                     <p>{lang === "fr"?"Chargement...":"Loading..."}</p>:
                     <div>
                         <FormControl id="formControl">
-                        <Box
-                            component="form"
-                            sx={{
-                                display: "flex",
-                                justifyContent: "center",
-                                flexDirection: "row",
-                                alignItems: "center",
-                                marginBottom: "20px",
-                                "& > *": {
-                                    marginLeft: "10px",
-                                    marginRight: "10px"
-                                }
-                            }}
-                            noValidate
-                            autoComplete="off"
-                            >
-                            <InputLabel id="typeSelect">Type</InputLabel>
-                            <Select
-                                labelId="typeSelect"
-                                id="typeSelectBox"
-                                value={type}
-                                label="Type"
-                                onChange={(e)=>{setType(e.target.value)}}
-                            >
-                                <MenuItem value={lang === "fr"?"TOUT":"ALL"} key={0}>{lang === "fr"?"TOUT":"ALL"}</MenuItem>
-                                {types.map((e, i) => <MenuItem key={i+1} value={e}>{e}</MenuItem>)}
-                            </Select>
-                            <TextField type="number" InputLabelProps={{ shrink: true, }} InputProps={{ inputProps: { min: 1 } }} id="max-pokemon" label="pokemons max" variant="standard" />
-                        </Box>
-                        </FormControl>
-                        <div id="pokeListBox">
-                        {pokeLists.map((e, i) => <Paper className="pokeCard" elevation={3} key={i}>
-                            <PokemonCard name={e.name} id={i} image={e.image}></PokemonCard>
-                        </Paper>)}
-                    </div>
+                            <Box
+                                component="form"
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    marginBottom: "20px",
+                                    "& > *": {
+                                        marginLeft: "10px",
+                                        marginRight: "10px"
+                                    }
+                                }}
+                                noValidate
+                                autoComplete="off"
+                                >
+                                <InputLabel id="typeSelect">Type</InputLabel>
+                                <Select
+                                    labelId="typeSelect"
+                                    id="typeSelectBox"
+                                    value={type}
+                                    label="Type"
+                                    onChange={(e)=>{setType(+e.target.value)}}
+                                >
+                                    <MenuItem value={0} key={0}>{lang === "fr"?"TOUT":"ALL"}</MenuItem>
+                                    {types.map((e, i) => <MenuItem key={i+1} value={i+1}>{e}</MenuItem>)}
+                                </Select>
+                                <TextField type="number" InputLabelProps={{ shrink: true, }} InputProps={{ inputProps: { min: 1 } }} id="max-pokemon" label="pokemons max" variant="standard" />
+                            </Box>
+                            </FormControl>
+                            <div id="pokeListBox">
+                            {pokeLists.map((e, i) => <Paper className="pokeCard" elevation={3} key={i}>
+                                <PokemonCard name={e.name} id={i} image={e.image}></PokemonCard>
+                            </Paper>)
+                            }
+                        </div>
                     </div>
                 }
             </Box>

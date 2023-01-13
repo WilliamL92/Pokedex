@@ -27,7 +27,7 @@ export function getPokemonData(pokeName: string | number): Promise<pokeApiSingle
     })
 }
 
-export function getAllPokemons(lang: lang): Promise<{name: string, image: string}[]>{
+export function getAllPokemons(lang: lang, type: number): Promise<{name: string, image: string}[]>{
     return new Promise(async (resolve, reject)=>{
         const pokeApiURL = "https://pokeapi.co/api/v2/pokemon-species?limit=905"
         const pokemonNames = await axios.get(pokeApiURL)
@@ -43,6 +43,7 @@ export function getAllPokemons(lang: lang): Promise<{name: string, image: string
                     catch(err){
                         reject(err)
                     }
+                    console.log(pokeDataSpecies)
                     if(typeof(pokeDataSpecies) !== "undefined" && typeof(pokeData) !== "undefined" && typeof(pokeDataSpecies.names[4]) !== "undefined"){
                         pokemonNames.data.results[i] = {name: pokeDataSpecies.names[4].name, image: pokeData.sprites.front_default} // 4 is the index of the french name in the pokeApi object
                     }
