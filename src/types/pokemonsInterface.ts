@@ -22,3 +22,8 @@ export interface DarkModeContextType {
     darkMode: boolean;
     setDarkMode: (bool: boolean)=>void;
 }
+
+export interface LangContextType {
+    lang: lang;
+    setLang: (str: lang)=>void;
+}

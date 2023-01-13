@@ -6,12 +6,21 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import ThemeContext from '../../Context/DarkModeContext'
+import LangContext from '../../Context/LangContext';
+import { lang as langType } from "../../types/pokemonsInterface"
 
 const PokedexLogo = () => {
     const { darkMode, setDarkMode } = useContext(ThemeContext)
+    const { lang, setLang } = useContext(LangContext)
 
     const handleChangeTheme = (displayMode: {target: {value: string}})=>{
         setDarkMode(displayMode.target.value === "dark")
+    }
+
+    const handleChangeLang = (langMode: {target: {value: string}})=>{
+        if(langMode.target.value === "fr" || langMode.target.value === "en"){
+            setLang(langMode.target.value)
+        }
     }
     return (
         <div id="headerPanel">
@@ -20,9 +29,9 @@ const PokedexLogo = () => {
                 <Select
                 labelId="langSelect"
                 id="langSelectBox"
-                value={"fr"}
+                value={lang}
                 label="Language"
-                onChange={()=>{}}
+                onChange={handleChangeLang}
                 >
                 <MenuItem value={"fr"}>FR</MenuItem>
                 <MenuItem value={"en"}>EN</MenuItem>
