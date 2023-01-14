@@ -23,31 +23,33 @@ const PokedexLogo = () => {
     }
     return (
         <div id="headerPanel">
-            <FormControl id="formControl">
-                <InputLabel id="langSelect">Language</InputLabel>
+            <FormControl id="langControl">
+                <InputLabel id="langSelect" style={{color: darkMode?"#F4F4F4":"#6C6C6C"}}>{lang === "fr"?"Langue":"Language"}</InputLabel>
                 <Select
                 labelId="langSelect"
                 id="langSelectBox"
                 value={lang}
                 label="Language"
                 onChange={handleChangeLang}
+                style={{color: darkMode?"#F4F4F4":"#6C6C6C"}}
                 >
                 <MenuItem value={"fr"}>FR</MenuItem>
                 <MenuItem value={"en"}>EN</MenuItem>
                 </Select>
             </FormControl>
             <img id="pokedexLogo" src={pokedexLogo} alt="pokedex" height={150}/>
-            <FormControl id="formControl">
-                <InputLabel id="themeSelect">Thème</InputLabel>
+            <FormControl id="themeControl" >
+                <InputLabel id="themeSelect" style={{color: darkMode?"#F4F4F4":"#6C6C6C"}}>{lang === "fr"?"Thème":"Theme"}</InputLabel>
                 <Select
                 labelId="themeSelect"
                 id="themeSelectBox"
                 value={darkMode?"dark":"light"}
                 label="Theme"
                 onChange={handleChangeTheme}
+                style={{color: darkMode?"#F4F4F4":"#6C6C6C"}}
                 >
-                <MenuItem value={"dark"}>DARK</MenuItem>
-                <MenuItem value={"light"}>LIGHT</MenuItem>
+                <MenuItem value={"dark"}>{lang === "fr"?"SOMBRE":"DARK"}</MenuItem>
+                <MenuItem value={"light"}>{lang === "fr"?"CLAIR":"LIGHT"}</MenuItem>
                 </Select>
             </FormControl>
         </div>

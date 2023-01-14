@@ -1,10 +1,10 @@
 export interface pokeData{
     name: string;
+    id: number;
 }
 
 export interface pokemonCardInterface {
     name: string;
-    id: number;
     image: string;
 }
 
@@ -15,7 +15,9 @@ export interface pokeApiSingleSpecies {
 }
 
 export interface pokeApiSingle { 
-    sprites: { front_default: string }
+    sprites: { front_default: string };
+    types: {type: {name: string, url: string}}[];
+    id: number;
 }
 
 export interface DarkModeContextType {

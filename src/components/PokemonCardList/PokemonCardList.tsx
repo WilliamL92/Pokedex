@@ -4,6 +4,7 @@ import Box from "@mui/material/Box"
 import { getAllPokemons, getAllPokemonTypes } from "../../functions/fetchPokemonsData"
 import PokemonCard from '../PokemonCard/PokemonCard';
 import LangContext from '../../Context/LangContext';
+import DarkModeContext from '../../Context/DarkModeContext';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -16,7 +17,8 @@ const PokemonCardList = () => {
     const [pokeLists, setPokeLists] = useState<{name: string, image: string}[]>([]);
     const [loading, setLoading] = useState(false);
     const { lang, setLang } = useContext(LangContext);
-    const [types, setTypes] = useState<string[]>([])
+    const { darkMode, setDarkMode } = useContext(DarkModeContext);
+    const [types, setTypes] = useState<string[]>([]);
     const [type, setType] = useState(0);
 
     useEffect(()=>{
@@ -30,6 +32,12 @@ const PokemonCardList = () => {
             setLoading(false)
         })()
     }, [lang])
+
+    async function handleChangeType(e: {target: {value: string}}){
+        setType(+e.target.value)
+        const resultLoadPokeList = await getAllPokemons(lang, +e.target.value)
+        setPokeLists(resultLoadPokeList)
+    }
     return (
         <div>
             <Box sx={{
@@ -46,7 +54,7 @@ const PokemonCardList = () => {
             >
                 {
                     loading?
-                    <p>{lang === "fr"?"Chargement...":"Loading..."}</p>:
+                    <p style={{color: darkMode?"#F4F4F4":"#6C6C6C"}}>{lang === "fr"?"Chargement...":"Loading..."}</p>:
                     <div>
                         <FormControl id="formControl">
                             <Box
@@ -65,23 +73,24 @@ const PokemonCardList = () => {
                                 noValidate
                                 autoComplete="off"
                                 >
-                                <InputLabel id="typeSelect">Type</InputLabel>
+                                <InputLabel id="typeSelect" style={{color: darkMode?"#F4F4F4":"#6C6C6C"}}>Type</InputLabel>
                                 <Select
                                     labelId="typeSelect"
                                     id="typeSelectBox"
-                                    value={type}
+                                    value={type.toString()}
                                     label="Type"
-                                    onChange={(e)=>{setType(+e.target.value)}}
+                                    onChange={handleChangeType}
+                                    style={{color: darkMode?"#F4F4F4":"#6C6C6C"}}
                                 >
                                     <MenuItem value={0} key={0}>{lang === "fr"?"TOUT":"ALL"}</MenuItem>
                                     {types.map((e, i) => <MenuItem key={i+1} value={i+1}>{e}</MenuItem>)}
                                 </Select>
-                                <TextField type="number" InputLabelProps={{ shrink: true, }} InputProps={{ inputProps: { min: 1 } }} id="max-pokemon" label="pokemons max" variant="standard" />
+                                <TextField type="number" InputLabelProps={{ shrink: true, style: {color: darkMode?"#F4F4F4":"#6C6C6C"} }} InputProps={{ inputProps: { min: 1, max: 905 } }} id="max-pokemon" defaultValue={905} label="limit" variant="standard" sx={{ input: { color: darkMode?"#F4F4F4":"#6C6C6C" } }}/>
                             </Box>
                             </FormControl>
                             <div id="pokeListBox">
                             {pokeLists.map((e, i) => <Paper className="pokeCard" elevation={3} key={i}>
-                                <PokemonCard name={e.name} id={i} image={e.image}></PokemonCard>
+                                <PokemonCard name={e.name} image={e.image}></PokemonCard>
                             </Paper>)
                             }
                         </div>

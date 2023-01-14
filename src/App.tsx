@@ -16,7 +16,7 @@ function App() {
   return (
     <LangContext.Provider value={{lang, setLang}}>
       <ThemeContext.Provider value={{darkMode, setDarkMode}}>
-        <div id="global">
+        <div id="global" className={darkMode?"global-font-dark":"global-font-light"}>
           <PokedexLogo></PokedexLogo>
           <BrowserRouter>
             <Routes>

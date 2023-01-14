@@ -1,5 +1,12 @@
 #global{
-    background: linear-gradient(rgb(0, 132, 255), rgb(243, 219, 219));
     height: 100%;
     min-height: 100vh;
+}
+
+.global-font-light {
+    background: linear-gradient(rgb(90, 172, 248), rgb(243, 219, 219));
+}
+
+.global-font-dark {
+    background: linear-gradient(rgb(21, 127, 226), rgb(31, 31, 31));
 }

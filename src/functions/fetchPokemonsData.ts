@@ -31,6 +31,7 @@ export function getAllPokemons(lang: lang, type: number): Promise<{name: string,
     return new Promise(async (resolve, reject)=>{
         const pokeApiURL = "https://pokeapi.co/api/v2/pokemon-species?limit=905"
         const pokemonNames = await axios.get(pokeApiURL)
+        let newArray: {name: string, image: string}[] = []
         switch(lang){
             case "fr":
                 pokemonNames.data.results.map(async (e: pokeData, i: number) => {
@@ -43,12 +44,16 @@ export function getAllPokemons(lang: lang, type: number): Promise<{name: string,
                     catch(err){
                         reject(err)
                     }
-                    console.log(pokeDataSpecies)
                     if(typeof(pokeDataSpecies) !== "undefined" && typeof(pokeData) !== "undefined" && typeof(pokeDataSpecies.names[4]) !== "undefined"){
-                        pokemonNames.data.results[i] = {name: pokeDataSpecies.names[4].name, image: pokeData.sprites.front_default} // 4 is the index of the french name in the pokeApi object
+                        if(type === 0){
+                            newArray.push({name: `${pokeData.id}.${pokeDataSpecies.names[4].name}`, image: pokeData.sprites.front_default})
+                        }
+                        else if(pokeData.types[0].type.url.split('/').at(-2) === type.toString() || pokeData.types[1]?.type.url.split('/').at(-2) === type.toString()){
+                            newArray.push({name: `${pokeData.id}.${pokeDataSpecies.names[4].name}`, image: pokeData.sprites.front_default})
+                        }
                     }
-                    if(i >= pokemonNames.data.results.length-1){
-                        resolve(pokemonNames.data.results)
+                    if(i+1 >= 905){
+                        resolve(newArray)
                     }
                 })
                 
@@ -63,10 +68,15 @@ export function getAllPokemons(lang: lang, type: number): Promise<{name: string,
                         reject(err)
                     }
                     if(typeof(pokeData) !== "undefined"){
-                        pokemonNames.data.results[i] = {name: e.name, image: pokeData.sprites.front_default}
+                        if(type === 0){
+                            newArray.push({name: `${pokeData.id}.${e.name}`, image: pokeData.sprites.front_default})
+                        }
+                        else if(pokeData.types[0].type.url.split('/').at(-2) === type.toString() || pokeData.types[1]?.type.url.split('/').at(-2) === type.toString()){
+                            newArray.push({name: `${pokeData.id}.${e.name}`, image: pokeData.sprites.front_default})
+                        }
                     }
                     if(i >= pokemonNames.data.results.length-1){
-                        resolve(pokemonNames.data.results)
+                        resolve(newArray)
                     }
                 })
             break;
@@ -79,20 +89,20 @@ export function getAllPokemonTypes(lang: lang): Promise<string[]>{
         const typesURL = "https://pokeapi.co/api/v2/type";
         const pokeData = await axios.get(typesURL);
         if(lang === "en"){
-            resolve(pokeData.data.results.map((e: {name: string}) => e.name).filter((rs: string) => rs !== "unknown").sort());
+            resolve(pokeData.data.results.map((e: {name: string}) => e.name).filter((rs: string) => rs !== "unknown" && rs !== "shadow"));
         }
         else if(lang === "fr"){
             let frPokemonTab: string[] = []
             let intTab = 0
-            pokeData.data.results.map(async (e: {name: string}, i: number) => {
-                const langURL = `https://pokeapi.co/api/v2/type/${e.name}`;
+            for(const items of pokeData.data.results){
+                const langURL = `https://pokeapi.co/api/v2/type/${items.name}`;
                 const pokeDataFr = await axios.get(langURL);
                 intTab++
                 frPokemonTab.push(pokeDataFr.data.names[3].name)
                 if(intTab >= pokeData.data.results.length-1){
-                    resolve(frPokemonTab.filter((rs: string) => rs !== "???" && rs !== "Crypto").sort());
+                    resolve(frPokemonTab.filter((rs: string) => rs !== "???" && rs !== "Crypto"));
                 }
-            })
+            }
         }
     })
 }
